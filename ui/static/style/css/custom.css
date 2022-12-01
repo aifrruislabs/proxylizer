@@ -1,0 +1,100 @@
+.navbar-custom {
+    background-color: #81dae2;
+}
+
+.navbar-custom a {
+    color: black;
+}
+
+.color-white {
+    color:white;
+}
+
+.color-green {
+    color: green;
+}
+
+.mouse-pointer {
+    cursor: pointer;
+}
+
+.required-field {
+    color: red;
+}
+
+.full-box {
+    width: 100%;
+}
+
+.font-size-20 {
+	font-size: 20px;
+}
+
+.text-left {
+    text-align: left;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.align-right {
+    text-align: right;
+}
+
+.align-center {
+    text-align: center;
+}
+
+.align-left {
+    text-align: left;
+}
+
+.float-left {
+	float: left;
+}
+
+.float-right {
+	float: right;
+}
+
+.no-margin-padding {
+	margin: 0;
+	padding: 0;
+}
+
+table {
+	width: 100%;
+}
+
+table tr td {
+	padding-top: 15px;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
+
+.black {
+    color: black;
+}
+
+.bg-green {
+    background-color: green;
+}
+
+.bg-red {
+    background-color: red;
+}
+
+.bg-black {
+    background-color: black;
+}
