@@ -7,10 +7,30 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+from .controllers import authcon
 from .controllers import container
 
 urlpatterns = [
   
+  # Auth APIS
+
+  # Login
+  path('/auth/auth_login', authcon.auth_login),
+
+  # Logout
+  path('/auth/auth_logout', authcon.auth_logout),
+
+  # Create Account
+  path('/auth/auth_new_account', authcon.auth_new_account),
+
+  # Forgot Password
+  path('/auth/auth_forgot_password', authcon.auth_forgot_password),
+
+  # Reset Password
+  path('/auth/auth_reset_password', authcon.auth_reset_password),
+
+  # AUTH APIS
+
   # Container APIS
 
   # Deploy Proxy Config

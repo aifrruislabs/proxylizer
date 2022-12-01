@@ -10,23 +10,36 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
+import environ
+
 from pathlib import Path
+from corsheaders.defaults import default_headers
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+env = environ.Env()
+env.read_env(env.str("ENV_PATH", BASE_DIR + "/.env"))
+# env.read_env(env.str("ENV_PATH", BASE_DIR + "/.env_local"))
+
+SECRET_KEY = env("SECRET_KEY")
+DB_HOST = env("DB_HOST")
+DB_PORT = int(env("DB_PORT"))
+
+DB_USER = env("DB_USER")
+DB_PASS = env("DB_PASS")
+DB_NAME = env("DB_NAME")
+
+DB_CONN_STRING = env("DB_CONN_STRING")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zc3^ukgcd3p*%e*d(rkta)s=teh068n=iqyopp8fgorsdfcc-t'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = ['*']
 
 # Application definition
 
@@ -37,19 +50,45 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'proxy_alpha',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'corsheaders',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CORS_ORIGIN_ALLOW_ALL = True
+
+# Adding Custom Headers on cors
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    "Auth-User", "Auth-Token"
+]
+
 ROOT_URLCONF = 'proxylizer.urls'
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+           'rest_framework.authentication.TokenAuthentication',
+    ),
+   
+   'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAdminUser', 
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+}
 
 TEMPLATES = [
     {
@@ -74,9 +113,16 @@ WSGI_APPLICATION = 'proxylizer.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "djongo",
+        "NAME": DB_NAME,
+        "ENFORCE_SCHEMA": False,
+        "CLIENT": {
+            "host": DB_HOST,
+            'port': DB_PORT,
+            'username': DB_USER,
+            'password': DB_PASS
+        },
     }
 }
 
@@ -99,6 +145,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema'}
 
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
@@ -116,6 +163,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
+
+LOGIN_URL = 'rest_framework:login'
+LOGOUT_URL = 'rest_framework:logout'
 
 STATIC_URL = '/static/'
 

@@ -14,8 +14,38 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, re_path, include
+from rest_framework_swagger.views import get_swagger_view
+
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
+
+schema_view = get_schema_view(
+   openapi.Info(
+      title="Proxylizer APIs",
+      default_version='v1',
+      description="Proxylizer APIS",
+      terms_of_service="https://proxylizer.aifrruislabs.com/terms/",
+      contact=openapi.Contact(email="emasanga@aifrruislabs.com"),
+      license=openapi.License(name="Aifrruis LABS License"),
+   ),
+   public=True,
+   permission_classes=[permissions.AllowAny],
+)
 
 urlpatterns = [
+    # Index With Swagger
+    re_path(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=0), name='schema-json'),
+    re_path(r'^$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    re_path(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
+
+    # Rest API Auth Urls
+    re_path(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+
+    # Proxylizer Backend Api v1 urls
+    re_path(r'^api/v1/', include('proxy_alpha.urls')),
+
+    # Admin
     path('admin/', admin.site.urls),
 ]
