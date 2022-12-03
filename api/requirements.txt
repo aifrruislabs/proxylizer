@@ -40,3 +40,7 @@ websocket==0.2.1
 zipp==3.8.0
 zope.event==4.5.0
 zope.interface==5.4.0
+subprocess32==3.5.4
+proxy-check==0.0.3
+sshtunnel==0.4.0
+paramiko==2.10.4

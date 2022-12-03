@@ -1,6 +1,8 @@
 export const state = () => ({
     
-    api : 'https://proxylizer.aifrruislabs.com/api/v1',
+    // api : 'https://proxylizer.aifrruislabs.com/api/v1',
+
+    api : 'http://127.0.0.1:8000/api/v1',
     
     auth_user: '',
 

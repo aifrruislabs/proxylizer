@@ -3,7 +3,7 @@
     <div class="container-fluid row">
             
             <div class="col-md-8">
-                <h4>Container</h4>
+                <h4>Dashboard</h4>
             </div>
     
             <div class="col-md-4">
@@ -20,7 +20,7 @@ import Swal from 'sweetalert2'
 
 export default {
   layout: 'master',
-  name: 'Container',
+  name: 'Dashboard',
   data() {
       return {
           

@@ -5,7 +5,7 @@ import cookie from 'cookie'
 export default ({store, req, isDev}) => {
   createPersistedState({
       key: 'vuex',
-      paths: ['auth_user', 'auth_token'],
+      paths: ['auth_user', 'auth_token', 'is_authenticated'],
       storage: {
         // getItem: (key) => process.client ? Cookies.getJSON(key) : cookie.parse(req.headers.cookie||'')[key],
         getItem: (key) => process.client ? Cookies.get(key) : cookie.parse(req.headers.cookie||'')[key],

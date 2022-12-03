@@ -9,6 +9,7 @@ class Container(models.Model):
     ssh_ip = models.CharField(max_length=200, blank=True)
     ssh_username = models.CharField(max_length=200, blank=True)
     ssh_password = models.CharField(max_length=200, blank=True)
+    is_deployed = models.CharField(max_length=20, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now_add=True)
     
