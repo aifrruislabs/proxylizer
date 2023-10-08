@@ -5,6 +5,8 @@ from datetime import date
 from drf_yasg import openapi
 from django.http import JsonResponse
 
+from proxy_alpha import toolsa
+
 from rest_framework.decorators import api_view
 from drf_yasg.utils import swagger_auto_schema
 
@@ -16,7 +18,7 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 
 @api_view(['POST'])
 def configure_remove_proxy(request):
-    containerId = request.GET['containerId']
+    containerId = request.POST.get('containerId')
 
     # Get Container Credentials
     containerData = Container.objects.get(id=containerId)
@@ -69,7 +71,7 @@ def deploy_proxy_config(request):
     """
 	Deploy squid Proxy to the Container/Server/Droplet
 	"""
-    containerId = request.GET['containerId']
+    containerId = request.POST.get('containerId')
 
     # Get Container Proxy Credentials
     containerData = Container.objects.get(id=containerId)
@@ -113,7 +115,9 @@ def deploy_proxy_config(request):
     updateIsConfigured.is_deployed = "T"
     updateIsConfigured.save()
 
-    return JsonResponse({'status': True})
+    return JsonResponse({
+        'status': True
+        })
 
 
 @api_view(['POST'])
@@ -158,9 +162,40 @@ def read_container(request):
 
 @api_view(['POST'])
 def create_container(request):
-	"""
-	Create Container
-	"""
-	return JsonResponse({
-		'status': True
-		})
+    """
+    Create Container
+    """
+    if request.method == 'POST':
+        # Get Params from Headers
+        user_id = request.POST.get('user_id')
+        container_title = request.POST.get('container_title')
+        container_info = request.POST.get('container_info')
+        ssh_ip = request.POST.get('ssh_ip')
+        ssh_username = request.POST.get('ssh_username')
+        ssh_password = request.POST.get('ssh_password')
+
+        # Add Container
+        new_container = Container()
+        new_container.id = toolsa.next_id(Container)
+        new_container.creator_id = user_id
+        new_container.container_title = container_title
+        new_container.container_info = container_info
+        new_container.ssh_ip = ssh_ip
+        new_container.ssh_username = ssh_username
+        new_container.ssh_password = ssh_password
+        new_container.is_deployed = "F"
+        new_container.save()
+
+        # Serialize Container
+        data_srz = ContainerSerializer(new_container).data
+
+        return JsonResponse({
+            'status': True,
+            'data': data_srz
+            })
+
+    else:
+        return JsonResponse({
+            'status': True,
+            'data': []
+            })

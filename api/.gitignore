@@ -1,2 +1,5 @@
 .env
 venv
+proxylizer/__pycache/
+proxylizer_alpha/__pycache/
+proxylizer_alpha/migrations/__pycache/
